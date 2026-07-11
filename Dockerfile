@@ -7,7 +7,7 @@ WORKDIR /app
 # Pehle sirf requirements copy karo (dependency install), code baad me — 
 # isse Docker cache use hota, code badalne pe dependency dobara install nahi karni padti
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
 # Ab poora app code copy karo
 COPY . .
