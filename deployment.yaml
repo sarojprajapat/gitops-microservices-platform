@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapi-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: myapi
+  template:
+    metadata:
+      labels:
+        app: myapi
+    spec:
+      containers:
+      - name: myapi
+        image: myapi:v1
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapi-service
+spec:
+  selector:
+    app: myapi
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+  type: NodePort
