@@ -12,7 +12,7 @@ jobs:
 
     # Zaroori permission — taaki ye job GitHub Container Registry me image push kar sake
     permissions:
-      contents: read
+      contents: write
       packages: write
 
     steps:
@@ -44,3 +44,19 @@ jobs:
       # Step 5: Image ko registry pe push karo (taaki cluster wahan se pull kar sake)
       - name: Push image to GHCR
         run: docker push ghcr.io/${{ github.repository_owner }}/myapi:${{ github.sha }}
+
+      # Step 6: values.yaml me naya image tag likh do (CD ka core step)
+      - name: Update Helm values with new image tag
+        run: |
+          sed -i "s|repository:.*|repository: ghcr.io/${{ github.repository_owner }}/myapi|" myapi-chart/values.yaml
+          sed -i "s|tag:.*|tag: \"${{ github.sha }}\"|" myapi-chart/values.yaml
+          sed -i "s|pullPolicy:.*|pullPolicy: IfNotPresent|" myapi-chart/values.yaml
+
+      # Step 7: Ye change khud commit + push karo (GitOps loop yahi se complete hota)
+      - name: Commit and push updated values.yaml
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add myapi-chart/values.yaml
+          git commit -m "CD: update image tag to ${{ github.sha }}" || echo "No changes to commit"
+          git push
