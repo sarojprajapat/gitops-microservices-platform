@@ -1,0 +1,14 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor          # Prometheus ko batata "is Service ko monitor karo"
+metadata:
+  name: myapi-servicemonitor
+  labels:
+    release: monitor        # zaroori — ye tumhare Prometheus Helm release ke naam se match hona chahiye
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: myapi-chart   # humari Service ka label match karega
+  endpoints:
+    - port: http                # Service me jo port ka naam hai wahi yahan daalo
+      path: /metrics             # kaha se data lena hai
+      interval: 15s               # har 15 second me naya data utha lo
