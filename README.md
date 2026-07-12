@@ -118,6 +118,4 @@ kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 ```
 
-## Author
 
-Saroj Prajapat — MCA student specializing in Cloud & DevOps, built as a portfolio project targeting Cloud/DevOps engineering roles.
